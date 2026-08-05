@@ -1,0 +1,189 @@
+==================
+Disjunction
+==================
+
+p(X) | q(X) :- r(X).
+
+---
+
+(source_file
+  (statement
+    (rule
+      head: (disjunction
+        (classical_atom
+          name: (identifier)
+          arguments: (terms
+            (variable)))
+        (classical_atom
+          name: (identifier)
+          arguments: (terms
+            (variable))))
+      body: (body
+        (naf_literal
+          atom: (classical_atom
+            name: (identifier)
+            arguments: (terms
+              (variable))))))))
+
+==================
+Choice with no bounds
+==================
+
+{ p(X) ; q(X) } :- r(X).
+
+---
+
+(source_file
+  (statement
+    (rule
+      head: (choice
+        elements: (choice_elements
+          (choice_element
+            literal: (classical_atom
+              name: (identifier)
+              arguments: (terms
+                (variable))))
+          (choice_element
+            literal: (classical_atom
+              name: (identifier)
+              arguments: (terms
+                (variable))))))
+      body: (body
+        (naf_literal
+          atom: (classical_atom
+            name: (identifier)
+            arguments: (terms
+              (variable))))))))
+
+==================
+Choice with lower bound
+==================
+
+1 <= { p(X) ; q(X) } :- r(X).
+
+---
+
+(source_file
+  (statement
+    (rule
+      head: (choice
+        left: (lower
+          (number)
+          (relation))
+        elements: (choice_elements
+          (choice_element
+            literal: (classical_atom
+              name: (identifier)
+              arguments: (terms
+                (variable))))
+          (choice_element
+            literal: (classical_atom
+              name: (identifier)
+              arguments: (terms
+                (variable))))))
+      body: (body
+        (naf_literal
+          atom: (classical_atom
+            name: (identifier)
+            arguments: (terms
+              (variable))))))))
+
+==================
+Choice with upper bound
+==================
+
+{ p(X) ; q(X) } <= 1 :- r(X).
+
+---
+
+(source_file
+  (statement
+    (rule
+      head: (choice
+        elements: (choice_elements
+          (choice_element
+            literal: (classical_atom
+              name: (identifier)
+              arguments: (termsa
+                (variable))))
+          (choice_element
+            literal: (classical_atom
+              name: (identifier)
+              arguments: (terms
+                (variable)))))
+        right: (upper
+          (relation)
+          (number)))
+      body: (body
+        (naf_literal
+          atom: (classical_atom
+            name: (identifier)
+            arguments: (terms
+              (variable))))))))
+
+==================
+Choice with both bounds
+==================
+
+1 <= { p(X) ; q(X) } <= 2 :- r(X).
+
+---
+
+(source_file
+  (statement
+    (rule
+      head: (choice
+        left: (lower
+          (number)
+          (relation))
+        elements: (choice_elements
+          (choice_element
+            literal: (classical_atom
+              name: (identifier)
+              arguments: (terms
+                (variable))))
+          (choice_element
+            literal: (classical_atom
+              name: (identifier)
+              arguments: (terms
+                (variable)))))
+        right: (upper
+          (relation)
+          (number)))
+      body: (body
+        (naf_literal
+          atom: (classical_atom
+            name: (identifier)
+            arguments: (terms
+              (variable))))))))
+
+==================
+Choice element with condition
+==================
+
+{ p(X) : q(X) } :- r(X).
+
+---
+
+(source_file
+  (statement
+    (rule
+      head: (choice
+        elements: (choice_elements
+          (choice_element
+            literal: (classical_atom
+              name: (identifier)
+              arguments: (terms
+                (variable)))
+            condition: (naf_literals
+              (naf_literal
+                atom: (classical_atom
+                  name: (identifier)
+                  arguments: (terms
+                    (variable))))))))
+      body: (body
+        (naf_literal
+          atom: (classical_atom
+            name: (identifier)
+            arguments: (terms
+              (variable))))))))

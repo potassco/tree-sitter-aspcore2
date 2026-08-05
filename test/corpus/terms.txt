@@ -1,0 +1,117 @@
+==================
+Classical atom without arguments
+==================
+
+p.
+
+---
+
+(source_file
+  (statement
+    (rule
+      head: (disjunction
+        (classical_atom
+          name: (identifier))))))
+
+==================
+Classically negated atom
+==================
+
+-p(a).
+
+---
+
+(source_file
+  (statement
+    (rule
+      head: (disjunction
+        (classical_atom
+          name: (identifier)
+          arguments: (terms
+            (function
+              name: (identifier))))))))
+
+==================
+Nested function term
+==================
+
+p(f(a,g(1))).
+
+---
+
+(source_file
+  (statement
+    (rule
+      head: (disjunction
+        (classical_atom
+          name: (identifier)
+          arguments: (terms
+            (function
+              name: (identifier)
+              arguments: (terms
+                (function
+                  name: (identifier))
+                (function
+                  name: (identifier)
+                  arguments: (terms
+                    (number)))))))))))
+
+==================
+Term variants
+==================
+
+p(1, "s", X, (X), f(X)) :- q(X, _).
+
+---
+
+(source_file
+  (statement
+    (rule
+      head: (disjunction
+        (classical_atom
+          name: (identifier)
+          arguments: (terms
+            (number)
+            (string)
+            (variable)
+            (parenthesized_term
+              (variable))
+            (function
+              name: (identifier)
+              arguments: (terms
+                (variable))))))
+      body: (body
+        (naf_literal
+          atom: (classical_atom
+            name: (identifier)
+            arguments: (terms
+              (variable)
+              (anonymous_variable))))))))
+
+==================
+Unary and binary operation precedence
+==================
+
+p(-X+2*3) :- q(X).
+
+---
+
+(source_file
+  (statement
+    (rule
+      head: (disjunction
+        (classical_atom
+          name: (identifier)
+          arguments: (terms
+            (binary_operation
+              left: (unary_operation
+                right: (variable))
+              right: (binary_operation
+                left: (number)
+                right: (number))))))
+      body: (body
+        (naf_literal
+          atom: (classical_atom
+            name: (identifier)
+            arguments: (terms
+              (variable))))))))

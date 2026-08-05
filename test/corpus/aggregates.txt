@@ -1,0 +1,132 @@
+==================
+Aggregate with lower and upper bound
+==================
+
+:- 1 <= #count { X : q(X) } <= 5.
+
+---
+
+(source_file
+  (statement
+    (integrity_constraint
+      body: (body
+        atom: (aggregate
+          left: (lower
+            (number)
+            (relation))
+          function: (aggregate_function)
+          elements: (aggregate_elements
+            (aggregate_element
+              terms: (terms
+                (variable))
+              condition: (naf_literals
+                (naf_literal
+                  atom: (classical_atom
+                    name: (identifier)
+                    arguments: (terms
+                      (variable)))))))
+          right: (upper
+            (relation)
+            (number)))))))
+
+==================
+Aggregate with only lower bound
+==================
+
+:- 1 <= #sum { X,a : q(X) }.
+
+---
+
+(source_file
+  (statement
+    (integrity_constraint
+      body: (body
+        atom: (aggregate
+          left: (lower
+            (number)
+            (relation))
+          function: (aggregate_function)
+          elements: (aggregate_elements
+            (aggregate_element
+              terms: (terms
+                (variable)
+                (function
+                  name: (identifier)))
+              condition: (naf_literals
+                (naf_literal
+                  atom: (classical_atom
+                    name: (identifier)
+                    arguments: (terms
+                      (variable))))))))))))
+
+==================
+Negated aggregate
+==================
+
+:- not #count { X : q(X) } <= 0.
+
+---
+
+(source_file
+  (statement
+    (integrity_constraint
+      body: (body
+        sign: (naf)
+        atom: (aggregate
+          function: (aggregate_function)
+          elements: (aggregate_elements
+            (aggregate_element
+              terms: (terms
+                (variable))
+              condition: (naf_literals
+                (naf_literal
+                  atom: (classical_atom
+                    name: (identifier)
+                    arguments: (terms
+                      (variable)))))))
+          right: (upper
+            (relation)
+            (number)))))))
+
+==================
+Aggregate element with terms only
+==================
+
+:- #count { X,Y }.
+
+---
+
+(source_file
+  (statement
+    (integrity_constraint
+      body: (body
+        atom: (aggregate
+          function: (aggregate_function)
+          elements: (aggregate_elements
+            (aggregate_element
+              terms: (terms
+                (variable)
+                (variable)))))))))
+
+==================
+Aggregate element with condition only
+==================
+
+:- #count { : q(X) }.
+
+---
+
+(source_file
+  (statement
+    (integrity_constraint
+      body: (body
+        atom: (aggregate
+          function: (aggregate_function)
+          elements: (aggregate_elements
+            (aggregate_element
+              condition: (naf_literals
+                (naf_literal
+                  atom: (classical_atom
+                    name: (identifier)
+                    arguments: (terms
+                      (variable))))))))))))

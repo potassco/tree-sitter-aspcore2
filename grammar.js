@@ -29,27 +29,54 @@ module.exports = grammar({
 
     statement: ($) => choice($.integrity_constraint, $.rule, $.weak_constraint),
 
-    integrity_constraint: ($) => seq(":-", $.body, "."),
+    integrity_constraint: ($) => seq(":-", field("body", $.body), "."),
 
-    rule: ($) => seq($.head, optional(seq(":-", $.body)), "."),
+    rule: ($) =>
+      seq(
+        field("head", $.head),
+        optional(seq(":-", field("body", $.body))),
+        ".",
+      ),
 
-    weak_constraint: ($) => seq(":~", $.body, ".", "[", $.weight_at_level, "]"),
+    weak_constraint: ($) =>
+      seq(
+        ":~",
+        field("body", $.body),
+        ".",
+        "[",
+        field("weight", $.weight_at_level),
+        "]",
+      ),
 
     weight_at_level: ($) =>
-      seq($.term, optional(seq("@", $.term)), ",", $.terms),
+      seq(
+        field("term", $.term),
+        optional(seq("@", field("priority", $.term))),
+        ",",
+        field("terms", $.terms),
+      ),
 
     head: ($) => choice($.disjunction, $.choice),
 
     body: ($) => seq($.body_literal, repeat(seq(",", $.body_literal))),
 
     body_literal: ($) =>
-      choice($.naf_literal, seq(optional($.naf), $.aggregate)),
+      choice(
+        $.naf_literal,
+        seq(optional(field("sign", $.naf)), field("atom", $.aggregate)),
+      ),
 
     disjunction: ($) =>
       seq($.classical_atom, repeat(seq("|", $.classical_atom))),
 
     choice: ($) =>
-      seq(optional($.lower), "{", $.choice_elements, "}", optional($.upper)),
+      seq(
+        optional(field("left", $.lower)),
+        "{",
+        field("elements", $.choice_elements),
+        "}",
+        optional(field("right", $.upper)),
+      ),
 
     lower: ($) => seq($.term, $.relation),
     upper: ($) => seq($.relation, $.term),
@@ -57,39 +84,43 @@ module.exports = grammar({
     choice_elements: ($) =>
       seq($.choice_element, repeat(seq(";", $.choice_element))),
 
-    choice_element: ($) => seq($.classical_atom, optional($.condition)),
+    choice_element: ($) =>
+      seq(field("literal", $.classical_atom), optional($.condition)),
 
     aggregate: ($) =>
       seq(
-        optional($.lower),
-        $.aggregate_function,
+        optional(field("left", $.lower)),
+        field("function", $.aggregate_function),
         "{",
-        $.aggregate_elements,
+        field("elements", $.aggregate_elements),
         "}",
-        optional($.upper),
+        optional(field("right", $.upper)),
       ),
 
     aggregate_elements: ($) =>
       seq($.aggregate_element, repeat(seq(";", $.aggregate_element))),
 
     aggregate_element: ($) =>
-      choice($.condition, seq($.terms, optional($.condition))),
+      choice($.condition, seq(field("terms", $.terms), optional($.condition))),
 
     aggregate_function: (_) =>
       token(choice("#sum", "#sum+", "#min", "#max", "#count")),
 
-    condition: ($) => seq(":", optional($.naf_literals)),
+    condition: ($) => seq(":", optional(field("condition", $.naf_literals))),
 
     naf_literals: ($) => seq($.naf_literal, repeat(seq(",", $.naf_literal))),
 
     naf_literal: ($) =>
-      choice(seq(optional($.naf), $.classical_atom), $.builtin_atom),
+      choice(
+        seq(optional(field("sign", $.naf)), field("atom", $.classical_atom)),
+        field("atom", $.builtin_atom),
+      ),
 
     classical_atom: ($) =>
       seq(
-        optional("-"),
-        $.identifier,
-        optional(seq("(", optional($.terms), ")")),
+        optional(field("sign", "-")),
+        field("name", $.identifier),
+        optional(seq("(", optional(field("arguments", $.terms)), ")")),
       ),
 
     builtin_atom: ($) => seq($.term, $.relation, $.term),
@@ -111,20 +142,52 @@ module.exports = grammar({
       ),
 
     function: ($) =>
-      seq($.identifier, optional(seq("(", optional($.terms), ")"))),
+      seq(
+        field("name", $.identifier),
+        optional(seq("(", optional(field("arguments", $.terms)), ")")),
+      ),
 
     identifier: (_) => token(/[a-z][A-Za-z0-9_]*/),
 
     parenthesized_term: ($) => seq("(", $.term, ")"),
 
-    unary_operation: ($) => prec.left(3, seq("-", $.term)),
+    unary_operation: ($) =>
+      prec.left(3, seq(field("operator", "-"), field("right", $.term))),
 
     binary_operation: ($) =>
       choice(
-        prec.left(1, seq($.term, "+", $.term)),
-        prec.left(1, seq($.term, "-", $.term)),
-        prec.left(2, seq($.term, "*", $.term)),
-        prec.left(2, seq($.term, "/", $.term)),
+        prec.left(
+          1,
+          seq(
+            field("left", $.term),
+            field("operator", "+"),
+            field("right", $.term),
+          ),
+        ),
+        prec.left(
+          1,
+          seq(
+            field("left", $.term),
+            field("operator", "-"),
+            field("right", $.term),
+          ),
+        ),
+        prec.left(
+          2,
+          seq(
+            field("left", $.term),
+            field("operator", "*"),
+            field("right", $.term),
+          ),
+        ),
+        prec.left(
+          2,
+          seq(
+            field("left", $.term),
+            field("operator", "/"),
+            field("right", $.term),
+          ),
+        ),
       ),
 
     number: (_) => token(/0|[1-9][0-9]*/),

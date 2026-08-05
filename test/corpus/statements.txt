@@ -1,0 +1,121 @@
+==================
+Fact
+==================
+
+p(a,b).
+
+---
+
+(source_file
+  (statement
+    (rule
+      head: (disjunction
+        (classical_atom
+          name: (identifier)
+          arguments: (terms
+            (function
+              name: (identifier))
+            (function
+              name: (identifier))))))))
+
+==================
+Rule with body
+==================
+
+p(X) :- q(X), not r(X), X > 0.
+
+---
+
+(source_file
+  (statement
+    (rule
+      head: (disjunction
+        (classical_atom
+          name: (identifier)
+          arguments: (terms
+            (variable))))
+      body: (body
+        (naf_literal
+          atom: (classical_atom
+            name: (identifier)
+            arguments: (terms
+              (variable))))
+        (naf_literal
+          sign: (naf)
+          atom: (classical_atom
+            name: (identifier)
+            arguments: (terms
+              (variable))))
+        (naf_literal
+          atom: (builtin_atom
+            (variable)
+            (relation)
+            (number)))))))
+
+==================
+Integrity constraint
+==================
+
+:- p(X), q(X).
+
+---
+
+(source_file
+  (statement
+    (integrity_constraint
+      body: (body
+        (naf_literal
+          atom: (classical_atom
+            name: (identifier)
+            arguments: (terms
+              (variable))))
+        (naf_literal
+          atom: (classical_atom
+            name: (identifier)
+            arguments: (terms
+              (variable))))))))
+
+==================
+Weak constraint without priority
+==================
+
+:~ p(X). [1, X]
+
+---
+
+(source_file
+  (statement
+    (weak_constraint
+      body: (body
+        (naf_literal
+          atom: (classical_atom
+            name: (identifier)
+            arguments: (terms
+              (variable)))))
+      weight: (weight_at_level
+        term: (number)
+        terms: (terms
+          (variable))))))
+
+==================
+Weak constraint with priority
+==================
+
+:~ p(X). [1@2, X]
+
+---
+
+(source_file
+  (statement
+    (weak_constraint
+      body: (body
+        (naf_literal
+          atom: (classical_atom
+            name: (identifier)
+            arguments: (terms
+              (variable)))))
+      weight: (weight_at_level
+        term: (number)
+        priority: (number)
+        terms: (terms
+          (variable))))))
