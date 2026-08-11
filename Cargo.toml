@@ -1,7 +1,7 @@
 [package]
 name = "tree-sitter-aspcore2"
 description = "A tree-sitter grammar for the ASP-Core-2 input language format for ASP (Aswer Set Programming) systems."
-version = "0.1.0"
+version = "1.0.0"
 authors = ["Amadé Nemes <nemesamade@gmail.com>"]
 license = "MIT"
 readme = "README.md"

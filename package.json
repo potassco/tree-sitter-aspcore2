@@ -1,6 +1,6 @@
 {
   "name": "@potassco/tree-sitter-aspcore2",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A tree-sitter grammar for the ASP-Core-2 input language format for ASP (Aswer Set Programming) systems.",
   "repository": {
     "type": "git",
