@@ -104,7 +104,7 @@ Choice with upper bound
           (choice_element
             literal: (classical_atom
               name: (identifier)
-              arguments: (termsa
+              arguments: (terms
                 (variable))))
           (choice_element
             literal: (classical_atom

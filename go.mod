@@ -1,4 +1,4 @@
-module github.com/namcsi/tree-sitter-aspcore-2
+module github.com/potassco/tree-sitter-aspcore2
 
 go 1.22
 
