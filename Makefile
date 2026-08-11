@@ -1,6 +1,6 @@
 LANGUAGE_NAME := tree-sitter-aspcore2
 HOMEPAGE_URL := https://github.com/potassco/tree-sitter-aspcore2
-VERSION := 1.0.0
+VERSION := 1.0.2
 
 # repository
 SRC_DIR := src
